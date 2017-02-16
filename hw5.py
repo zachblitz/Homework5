@@ -5,7 +5,7 @@ import json
 
 ## SI 206 - W17 - HW5
 ## COMMENT WITH:
-## Your section day/time:
+## Your section day/time: Thursday 3-4pm
 ## Any names of people you worked with on this assignment:
 
 ######## 500 points total ########
@@ -35,10 +35,10 @@ import json
 ## **** If you choose not to do that, we strongly advise using authentication information for an 'extra' Twitter account you make just for this class, and not your personal account, because it's not ideal to share your authentication information for a real account that you use frequently.
 
 ## Get your secret values to authenticate to Twitter. You may replace each of these with variables rather than filling in the empty strings if you choose to do the secure way for 50 EC points
-consumer_key = "" 
-consumer_secret = ""
-access_token = ""
-access_token_secret = ""
+consumer_key = "O8jQO7fbS71DN9OaL1vJ0QTOB" 
+consumer_secret = "TFKwkPLHjLDU2WnOA5d0slhc4PzyJypACQ8yuf48c5owotdXBb"
+access_token = "832292756273917953-bN7YYLLlSABTiFHoEkSqZjRDh6TUiRK"
+access_token_secret = "EUejQduR5wn1Ey8QNK9VTI3miX3tCB9KmB6uybbDJZjXL"
 ## Set up your authentication to Twitter
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
@@ -52,10 +52,27 @@ api = tweepy.API(auth, parser=tweepy.parsers.JSONParser()) # Set up library to g
 ## 3. Invoke your function, save the return value in a variable, and explore the data you got back!
 ## 4. With what you learn from the data -- e.g. how exactly to find the text of each tweet in the big nested structure -- write code to print out content from 3 tweets, as shown above.
 
-cached_twitter_info = 'twitter_info.json'
+twitter_data = 'twitter_info.json'
+
+try:
+	twitter_info = open(twitter_data, 'r')
+	twitter_contents = twitter_info.read()
+	cache_diction = json.loads(twitter_contents)
+	twitter_info.close()
+
+except:
+	cache_diction = {}
 
 
+search_guy = input("Enter something you want to search for on Twitter: ")
+results = api.search(q = search_guy)
 
+list_of_tweets = results["statuses"]
+
+for tweet in list_of_tweets[0:3]:
+	print(tweet["text"])
+	print (tweet["created_at"])
+	print("\n")
 
 
 
