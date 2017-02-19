@@ -52,27 +52,46 @@ api = tweepy.API(auth, parser=tweepy.parsers.JSONParser()) # Set up library to g
 ## 3. Invoke your function, save the return value in a variable, and explore the data you got back!
 ## 4. With what you learn from the data -- e.g. how exactly to find the text of each tweet in the big nested structure -- write code to print out content from 3 tweets, as shown above.
 
-twitter_data = 'twitter_info.json'
+twitter_cache_data = 'twitter_info.json'
 
 try:
-	twitter_info = open(twitter_data, 'r')
-	twitter_contents = twitter_info.read()
-	cache_diction = json.loads(twitter_contents)
-	twitter_info.close()
+	twitter_cache_file = open(twitter_cache_data, 'r')
+	twitter_cache_contents = twitter_cache_file.read()
+	twitter_cache_diction = json.loads(twitter_cache_contents)
 
 except:
-	cache_diction = {}
-
-
+	twitter_cache_diction = {}
+	
 search_guy = input("Enter something you want to search for on Twitter: ")
-results = api.search(q = search_guy)
 
-list_of_tweets = results["statuses"]
 
-for tweet in list_of_tweets[0:3]:
-	print(tweet["text"])
-	print (tweet["created_at"])
+def twitter_data(search_guy):
+	user_search = search_guy
+	
+	if user_search in twitter_cache_diction:
+		results = twitter_cache_diction[user_search]
+		
+
+	
+	else:
+		results = api.search(q = search_guy)
+		twitter_cache_diction[user_search] = results
+		new_data = open(twitter_cache_data, 'w')
+		new_data.write(json.dumps(twitter_cache_diction))
+		new_data.close
+		
+	list_of_tweets = results['statuses']
+
+	return list_of_tweets
+
+for items in twitter_data(search_guy)[0:3]:
+	print(items['text'])
+	print(items['created_at'])
 	print("\n")
+
+
+
+
 
 
 
